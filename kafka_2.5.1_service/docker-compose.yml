@@ -1,0 +1,132 @@
+version: "3.0"
+services: 
+  kfk_node01:
+    build:
+      context: .
+      dockerfile: kafka_dockerfile
+    ports:
+       - 9092
+       - 29092
+    env_file:
+       - kafka.common.env
+       - kafka.node01.env
+    depends_on:
+       - zk_node01
+       - zk_node02
+       - zk_node03
+    volumes:
+       - kfk_node01_vol:/tmp
+    networks:
+       - kafka_net 
+    hostname: kfk_node01
+    container_name: kfk_node01    
+  kfk_node02:
+    build:
+      context: .
+      dockerfile: kafka_dockerfile      
+    ports:
+       - 9092
+       - 29092
+    env_file:
+       - kafka.common.env
+       - kafka.node02.env
+    depends_on:
+       - zk_node01
+       - zk_node02
+       - zk_node03
+    volumes:
+       - kfk_node02_vol:/tmp
+    networks:
+       - kafka_net
+    hostname: kfk_node02
+    container_name: kfk_node02
+  kfk_node03:
+    build:
+      context: .
+      dockerfile: kafka_dockerfile
+    ports:
+       - 9092
+       - 29092
+    env_file:
+       - kafka.common.env
+       - kafka.node03.env
+    depends_on:
+       - zk_node01
+       - zk_node02
+       - zk_node03
+    volumes:
+       - kfk_node03_vol:/tmp
+    networks:
+       - kafka_net
+    hostname: kfk_node03
+    container_name: kfk_node03
+  zk_node01:
+    build:
+      context: .
+      dockerfile: zookeeper_dockerfile
+      args:
+        zk_props: zookeeper_override.properties
+    environment:
+        zk_id: 1
+    ports:
+       - 2181
+       - 2888
+       - 3888
+    volumes:
+       - zk_node01_vol:/tmp
+    networks:
+       - kafka_net 
+    hostname: zk_node01
+    container_name: zk_node01
+  zk_node02:
+    build:
+      context: .
+      dockerfile: zookeeper_dockerfile
+      args:
+        zk_props: zookeeper_override.properties
+    environment:
+       zk_id: 2        
+    ports:
+       - 2181
+       - 2888
+       - 3888
+    volumes:
+       - zk_node02_vol:/tmp
+    networks:
+       - kafka_net 
+    hostname: zk_node02
+    container_name: zk_node02 
+  zk_node03:
+    build:
+      context: .
+      dockerfile: zookeeper_dockerfile      
+      args:
+        zk_props: zookeeper_override.properties
+    environment:
+        zk_id: 3
+    ports:
+       - 2181
+       - 2888
+       - 3888
+    volumes:
+       - zk_node03_vol:/tmp
+    networks:
+       - kafka_net 
+    hostname: zk_node03
+    container_name: zk_node03       
+volumes:
+  kfk_node01_vol:
+    driver: "local"
+  kfk_node02_vol:
+    driver: "local"
+  kfk_node03_vol:
+    driver: "local"
+  zk_node01_vol:
+    driver: "local"
+  zk_node02_vol:
+    driver: "local"
+  zk_node03_vol:
+    driver: "local"
+networks:
+  kafka_net:
+    driver: overlay

@@ -1,0 +1,6 @@
+FROM openjdk:8
+RUN mkdir /usr/harim/
+ADD sw_packages/ /usr/harim/sw_packages
+RUN chmod -R 0755 /usr/harim/
+WORKDIR /usr/harim/sw_packages/kafka_2.12-2.5.1/bin
+CMD sh start_kafka_service.sh

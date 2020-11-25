@@ -1,0 +1,8 @@
+FROM openjdk:8
+RUN mkdir /usr/harim/
+ADD sw_packages/ /usr/harim/sw_packages
+RUN chmod -R 0755 /usr/harim/
+ADD zookeeper_override.properties /usr/harim/sw_packages/kafka_2.12-2.5.1/config/zookeeper_override.properties
+RUN chmod -R 0755 /usr/harim/sw_packages/kafka_2.12-2.5.1/config/zookeeper_override.properties
+WORKDIR /usr/harim/sw_packages/kafka_2.12-2.5.1/bin
+CMD sh start_zk_service.sh
